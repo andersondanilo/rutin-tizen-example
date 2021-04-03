@@ -1,3 +1,7 @@
+use rutin_tizen_sys::{
+    app_control_h, dlog_print, log_priority_DLOG_ERROR, ui_app_lifecycle_callback_s, ui_app_main,
+    Eo, Evas_Coord,
+};
 use std::env::args_os;
 use std::ffi::CStr;
 use std::marker::Sized;
@@ -7,10 +11,6 @@ use std::os::raw::{c_char, c_int, c_void};
 use std::os::unix::ffi::OsStrExt;
 use std::process::exit;
 use std::ptr::null_mut;
-use tizen_sys::{
-    app_control_h, dlog_print, log_priority_DLOG_ERROR, ui_app_lifecycle_callback_s, ui_app_main,
-    Eo, Evas_Coord,
-};
 
 fn main() {
     unsafe {
@@ -71,39 +71,39 @@ impl UIApp for HueApp {
         }
 
         unsafe {
-            let conform = tizen_sys::elm_conformant_add(win.eo());
-            tizen_sys::elm_win_indicator_mode_set(
+            let conform = rutin_tizen_sys::elm_conformant_add(win.eo());
+            rutin_tizen_sys::elm_win_indicator_mode_set(
                 win.eo(),
-                tizen_sys::Elm_Win_Indicator_Mode_ELM_WIN_INDICATOR_SHOW,
+                rutin_tizen_sys::Elm_Win_Indicator_Mode_ELM_WIN_INDICATOR_SHOW,
             );
-            tizen_sys::elm_win_indicator_opacity_set(
+            rutin_tizen_sys::elm_win_indicator_opacity_set(
                 win.eo(),
-                tizen_sys::Elm_Win_Indicator_Opacity_Mode_ELM_WIN_INDICATOR_OPAQUE,
+                rutin_tizen_sys::Elm_Win_Indicator_Opacity_Mode_ELM_WIN_INDICATOR_OPAQUE,
             );
-            tizen_sys::evas_object_size_hint_weight_set(
+            rutin_tizen_sys::evas_object_size_hint_weight_set(
                 win.eo(),
-                tizen_sys::EVAS_HINT_EXPAND,
-                tizen_sys::EVAS_HINT_EXPAND,
+                rutin_tizen_sys::EVAS_HINT_EXPAND,
+                rutin_tizen_sys::EVAS_HINT_EXPAND,
             );
-            tizen_sys::elm_win_resize_object_add(win.eo(), conform);
-            tizen_sys::evas_object_show(conform);
+            rutin_tizen_sys::elm_win_resize_object_add(win.eo(), conform);
+            rutin_tizen_sys::evas_object_show(conform);
 
             /* Label */
             /* Create an actual view of the base gui.
             Modify this part to change the view. */
-            let label = tizen_sys::elm_label_add(conform);
-            tizen_sys::elm_object_part_text_set(
+            let label = rutin_tizen_sys::elm_label_add(conform);
+            rutin_tizen_sys::elm_object_part_text_set(
                 label,
                 std::ptr::null(),
-                CStr::from_bytes_with_nul_unchecked("<align=center>ANDERSON</align>\0".as_bytes())
+                CStr::from_bytes_with_nul_unchecked("<align=center>Test01</align>\0".as_bytes())
                     .as_ptr(),
             );
-            tizen_sys::evas_object_size_hint_weight_set(
+            rutin_tizen_sys::evas_object_size_hint_weight_set(
                 label,
-                tizen_sys::EVAS_HINT_EXPAND,
-                tizen_sys::EVAS_HINT_EXPAND,
+                rutin_tizen_sys::EVAS_HINT_EXPAND,
+                rutin_tizen_sys::EVAS_HINT_EXPAND,
             );
-            tizen_sys::elm_object_part_content_set(conform, std::ptr::null(), label);
+            rutin_tizen_sys::elm_object_part_content_set(conform, std::ptr::null(), label);
 
             self.nodes.push(conform);
             self.nodes.push(label);
@@ -181,13 +181,13 @@ extern "C" fn app_control<T: UIApp>(app_control: app_control_h, data: *mut c_voi
 }
 
 pub struct EvasObject {
-    obj: *mut tizen_sys::Eo,
+    obj: *mut rutin_tizen_sys::Eo,
     //smart_callbacks: HashMap<'static CStr, Box<Fn<(&mut EvasObject,
     //                                               *mut c_void)>>>;
 }
 
 impl EvasObject {
-    fn eo(&mut self) -> *mut tizen_sys::Eo {
+    fn eo(&mut self) -> *mut rutin_tizen_sys::Eo {
         self.obj
     }
 
@@ -197,25 +197,25 @@ impl EvasObject {
             let mut y = uninitialized();
             let mut w = uninitialized();
             let mut h = uninitialized();
-            tizen_sys::evas_object_geometry_get(self.eo(), &mut x, &mut y, &mut w, &mut h);
+            rutin_tizen_sys::evas_object_geometry_get(self.eo(), &mut x, &mut y, &mut w, &mut h);
             (x, y, w, h)
         }
     }
 
     pub fn geometry_set(&mut self, x: Evas_Coord, y: Evas_Coord, w: Evas_Coord, h: Evas_Coord) {
-        unsafe { tizen_sys::evas_object_geometry_set(self.eo(), x, y, w, h) }
+        unsafe { rutin_tizen_sys::evas_object_geometry_set(self.eo(), x, y, w, h) }
     }
 
     pub fn show(&mut self) {
-        unsafe { tizen_sys::evas_object_show(self.eo()) }
+        unsafe { rutin_tizen_sys::evas_object_show(self.eo()) }
     }
 
     pub fn hide(&mut self) {
-        unsafe { tizen_sys::evas_object_hide(self.eo()) }
+        unsafe { rutin_tizen_sys::evas_object_hide(self.eo()) }
     }
 
     pub fn size_hint_weight_set(&mut self, x: f64, y: f64) {
-        unsafe { tizen_sys::evas_object_size_hint_weight_set(self.eo(), x, y) }
+        unsafe { rutin_tizen_sys::evas_object_size_hint_weight_set(self.eo(), x, y) }
     }
 
     /*
@@ -238,7 +238,7 @@ impl EvasObject {
 }
 
 /*
-extern fn smart_callback_wrapper(data: c_void, obj: *mut tizen_sys::Eo, event_info: *mut c_void) {
+extern fn smart_callback_wrapper(data: c_void, obj: *mut rutin_tizen_sys::Eo, event_info: *mut c_void) {
 }
     ::std::option::Option<unsafe extern "C" fn(data:
                                                    *mut ::std::os::raw::c_void,
@@ -265,7 +265,8 @@ impl DerefMut for ElmWin {
 
 impl ElmWin {
     pub fn standard_add(name: &'static CStr, title: &'static CStr) -> Option<Self> {
-        let win = unsafe { tizen_sys::elm_win_util_standard_add(name.as_ptr(), title.as_ptr()) };
+        let win =
+            unsafe { rutin_tizen_sys::elm_win_util_standard_add(name.as_ptr(), title.as_ptr()) };
         if win.is_null() {
             None
         } else {
@@ -275,19 +276,19 @@ impl ElmWin {
 
     pub fn autodel_set(&mut self, autodel: bool) {
         unsafe {
-            tizen_sys::elm_win_autodel_set(self.eo(), if autodel { 1 } else { 0 });
+            rutin_tizen_sys::elm_win_autodel_set(self.eo(), if autodel { 1 } else { 0 });
         }
     }
 
     pub fn autodel_get(&mut self) -> bool {
-        unsafe { tizen_sys::elm_win_autodel_get(self.eo()) != 0 }
+        unsafe { rutin_tizen_sys::elm_win_autodel_get(self.eo()) != 0 }
     }
 
     pub fn lower(&mut self) {
-        unsafe { tizen_sys::elm_win_lower(self.eo()) }
+        unsafe { rutin_tizen_sys::elm_win_lower(self.eo()) }
     }
 
     pub fn wm_rotation_supported_get(&self) -> bool {
-        unsafe { tizen_sys::elm_win_wm_rotation_supported_get(self.obj) != 0 }
+        unsafe { rutin_tizen_sys::elm_win_wm_rotation_supported_get(self.obj) != 0 }
     }
 }

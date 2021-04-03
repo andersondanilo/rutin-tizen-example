@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns="http://tizen.org/ns/packages" api-version="5.5" package="com.andersondanilo.tizen-example" version="0.1.0">
 	<profile name="wearable" />
-	<ui-application appid="com.andersondanilo.tizen-example" exec="tizen-example" type="capp" multiple="false" taskmanage="true" nodisplay="false">
+	<ui-application appid="com.andersondanilo.tizen-example" exec="rutin-tizen-example" type="capp" multiple="false" taskmanage="true" nodisplay="false">
 		<label>tizenexample</label>
 		<icon>icon.png</icon>
 	</ui-application>

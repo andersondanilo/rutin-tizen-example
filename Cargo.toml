@@ -1,11 +1,11 @@
 [package]
-name = "tizen-example"
+name = "rutin-tizen-example"
 version = "0.1.0"
 authors = ["Anderson Danilo <contact@andersondanilo.com>"]
 edition = "2018"
 
 [dependencies]
-tizen-sys = "0.1.0"
+rutin-tizen-sys = "0.1.0"
 
 [patch.crates-io]
-tizen-sys = { path = "../tizen-sys" }
+rutin-tizen-sys = { path = "../rutin-tizen-sys" }
