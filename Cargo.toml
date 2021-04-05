@@ -5,7 +5,8 @@ authors = ["Anderson Danilo <contact@andersondanilo.com>"]
 edition = "2018"
 
 [dependencies]
-rutin-tizen-sys = "0.1.0"
+rutin-tizen = "0.1.0"
 
 [patch.crates-io]
+rutin-tizen = { path = "../rutin-tizen" }
 rutin-tizen-sys = { path = "../rutin-tizen-sys" }
