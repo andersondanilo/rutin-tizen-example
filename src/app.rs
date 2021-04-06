@@ -1,13 +1,13 @@
 use crate::constants::{APP_ID, LOG_TAG};
 pub use rutin_tizen::app::UIApp;
-use rutin_tizen::efl::elm::Conformant;
-use rutin_tizen::efl::elm::{IndicatorMode, IndicatorOpacityMode, Win};
-pub use rutin_tizen::efl::evas::Object;
+pub use rutin_tizen::efl::elm::prelude::*;
+use rutin_tizen::efl::elm::{Conformant, IndicatorMode, IndicatorOpacityMode, Label, Win};
 use rutin_tizen::efl::evas::SizeHint;
-use rutin_tizen::system::{dlog, dlog::Priority};
+use rutin_tizen::system::dlog;
+use rutin_tizen::system::dlog::Priority;
 
 pub struct App<'a> {
-    _owned: Vec<Box<dyn Object<'a>>>,
+    _owned: Vec<Box<dyn Object<'a> + 'a>>,
 }
 
 impl<'a> App<'a> {
@@ -27,10 +27,15 @@ impl<'a> UIApp for App<'a> {
         }
 
         let mut win = win.unwrap();
+
+        dlog::print(Priority::Error, LOG_TAG, "Win Started!");
+
         win.set_autodel(true);
         win.set_indicator_mode(IndicatorMode::Show);
         win.set_indicator_opacity(IndicatorOpacityMode::Opaque);
         win.set_size_hint_weight(SizeHint::Expand, SizeHint::Expand);
+
+        dlog::print(Priority::Error, LOG_TAG, "Win Configured!");
 
         let conformant = Conformant::new(&mut win);
 
@@ -40,7 +45,33 @@ impl<'a> UIApp for App<'a> {
 
         let mut conformant = conformant.unwrap();
 
+        dlog::print(Priority::Error, LOG_TAG, "Conformant Created!");
+
+        win.add_resize_object(&mut conformant);
+        conformant.show();
+
+        let label = Label::new(&mut conformant);
+
+        if label.is_none() {
+            return false;
+        }
+
+        let mut label = label.unwrap();
+
+        dlog::print(Priority::Error, LOG_TAG, "Label Created!");
+
+        label.set_text("<align=center>Hello World</align>");
+        label.set_size_hint_weight(SizeHint::Expand, SizeHint::Expand);
+
+        conformant.set_content(&mut label);
+
+        win.show();
+
+        dlog::print(Priority::Error, LOG_TAG, "Win showed!");
+
         self._owned.push(Box::new(win));
+        self._owned.push(Box::new(conformant));
+        self._owned.push(Box::new(label));
 
         true
     }
